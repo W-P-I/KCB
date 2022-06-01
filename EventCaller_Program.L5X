@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="33.00" TargetName="EventCaller" TargetType="Program" ContainsContext="true" ExportDate="Wed Jun 01 15:49:20 2022" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="KCB_honger">
+<DataTypes Use="Context">
+</DataTypes>
+<Modules Use="Context">
+<Module Use="Reference" Name="Discrete_IO">
+</Module>
+<Module Use="Reference" Name="IB8">
+</Module>
+<Module Use="Reference" Name="Local">
+</Module>
+<Module Use="Reference" Name="point_IO">
+</Module>
+</Modules>
+<Tags Use="Context">
+<Tag Name="I_Estop_C1" TagType="Alias" Radix="Decimal" AliasFor="Local:1:I.Data.4" ExternalAccess="Read/Write"/>
+<Tag Name="I_RESET" TagType="Alias" Radix="Decimal" AliasFor="point_IO:1:I.7" ExternalAccess="Read/Write"/>
+<Tag Name="timer1" TagType="Base" DataType="TIMER" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[0,100,0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="TIMER">
+<DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="100"/>
+<DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="EN" DataType="BOOL" Value="0"/>
+<DataValueMember Name="TT" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DN" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+</Tags>
+<Programs Use="Context">
+<Program Use="Target" Name="EventCaller" TestEdits="false" MainRoutineName="MainRoutine" Disabled="false" UseAsFolder="false">
+<Tags>
+<Tag Name="I_Reset_confirm" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="ONF_OB" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="ONF_OB1" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="ONF_SB" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="ONF_SB1" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[0]]>
+</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="timer" TagType="Base" DataType="TIMER" Constant="false" ExternalAccess="Read/Write">
+<Data Format="L5K">
+<![CDATA[[2809351,100,0]]]>
+</Data>
+<Data Format="Decorated">
+<Structure DataType="TIMER">
+<DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="100"/>
+<DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="EN" DataType="BOOL" Value="0"/>
+<DataValueMember Name="TT" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DN" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+</Tags>
+<Routines>
+<Routine Name="MainRoutine" Type="RLL">
+<RLLContent>
+<Rung Number="0" Type="N">
+<Text>
+<![CDATA[EVENT(Unit1_CreamSystem);]]>
+</Text>
+</Rung>
+<Rung Number="1" Type="N">
+<Comment>
+<![CDATA[NOP moet nog een Reset MAPPED inzetten.
+
+###########
+###########
+###########
+]]>
+</Comment>
+<Text>
+<![CDATA[[[XIC(I_Reset_confirm) ,XIC(I_RESET) ] OSF(ONF_SB,ONF_OB) ,XIC(ONF_OB) NOP() ];]]>
+</Text>
+</Rung>
+<Rung Number="2" Type="N">
+<Text>
+<![CDATA[[XIC(ONF_OB) XIO(\Unit1_Obj_Model.System_HMI_I.Reset) OTL(\Unit1_Obj_Model.System_HMI_I.Reset) ,XIO(ONF_OB) XIC(\Unit1_Obj_Model.System_HMI_I.Reset) TON(timer,?,?) XIC(timer.DN) OTU(\Unit1_Obj_Model.System_HMI_I.Reset) ];]]>
+</Text>
+</Rung>
+<Rung Number="3" Type="N">
+<Comment>
+<![CDATA[NOP moet nog een Clear MAPPED inzetten.
+
+###########
+###########
+###########
+]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(I_RESET) OSF(ONF_SB1,ONF_OB1) ,XIC(ONF_OB) NOP() ];]]>
+</Text>
+</Rung>
+<Rung Number="4" Type="N">
+<Text>
+<![CDATA[[XIC(ONF_OB1) XIO(\Unit1_Obj_Model.System_HMI_I.Clear) XIC(I_Estop_C1) OTL(\Unit1_Obj_Model.System_HMI_I.Clear) ,XIO(ONF_OB1) XIC(\Unit1_Obj_Model.System_HMI_I.Clear) TON(timer1,?,?) XIC(timer1.DN) OTU(\Unit1_Obj_Model.System_HMI_I.Clear) ];]]>
+</Text>
+</Rung>
+</RLLContent>
+</Routine>
+</Routines>
+</Program>
+<Program Use="Context" Name="Unit1_Obj_Model">
+<Tags Use="Context">
+<Tag Use="Reference" Name="System_HMI_I">
+</Tag>
+</Tags>
+</Program>
+</Programs>
+<Tasks Use="Context">
+<Task Use="Reference" Name="Unit1_CreamSystem">
+</Task>
+</Tasks>
+</Controller>
+</RSLogix5000Content>
